@@ -121,4 +121,26 @@ for file in files:
 #getting the dict from it:
 own_cards_dict = get_dict_from_deck_info(deck_info_own)
 action = actions(own_cards_dict)
-print(action.make_list_from_card_dic(own_cards_dict))
+#print(action.make_list_from_card_dic(own_cards_dict))
+
+class game():
+    def __init__(self,action_class):
+        self.action = action_class
+        self.running = True
+    
+    def main_loop(self):
+        while self.running:
+            screen.fill((100,100,125))
+            #update things
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        pass
+            pygame.display.update()
+
+my_game = game(action)
+my_game.main_loop()
+
+        
