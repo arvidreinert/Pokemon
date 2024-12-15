@@ -1,6 +1,7 @@
 from setup import *
 from rectangle import *
 import os
+
 images = os.listdir()
 info_text = False
 #looking if Deckinfos exist
@@ -55,19 +56,29 @@ if info_text == False:
     #Has to be edited!
     name = input("name des Decks?(Idealerweise gleich wie bei den Bildern)")
     f = open(f"Deck_info_{name}.txt", "a")
-    f.write(f"card_images = {card_images_dict}")
+    f.write(f"card_images={card_images_dict}")
     f.close()
 
 #now here the real code starts:
 class actions():
     def __init__(self):
-        self.cards = []
-        images = os.listdir()
-        info_text = False
-        #looking if Deckinfos exist
-        for file in images:
-            if "Deck_info_" in file:
-                info_text = True
-                break
+        self.my_cards = {}
+        #print(self.my_cards,type(self.my_cards))
+
+                
 
     def shuffle_deck():
+        pass
+
+deck_info_own = ""
+files = os.listdir()
+for file in files:
+    if "Deck_info_" in file and "opponent" not in file:
+        deck_info_own = file
+
+file = open(deck_info_own, "r")
+card_dict,content = file.readline().split("=")
+
+deck_info_own = content
+test_dic = {}
+action = actions()
