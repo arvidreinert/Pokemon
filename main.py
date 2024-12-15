@@ -81,4 +81,21 @@ card_dict,content = file.readline().split("=")
 
 deck_info_own = content
 test_dic = {}
+x = deck_info_own.split(",")
+x[0] = list(x[0])
+print(x[0])
+del x[0][0]
+print(x[0])
+t = ""
+for i in x[0]:
+    t += i
+x[0] = t
+
+x[-1] = list(x[-1])
+del x[-1][-1]
+t = ""
+for i in x[-1]:
+    t += i
+x[-1] = t
+
 action = actions()
