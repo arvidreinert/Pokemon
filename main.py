@@ -124,23 +124,51 @@ action = actions(own_cards_dict)
 #print(action.make_list_from_card_dic(own_cards_dict))
 
 class game():
-    def __init__(self,action_class):
+    def __init__(self,action_class,own_dict):
         self.action = action_class
         self.running = True
-    
+        self.my_cards = action.make_list_from_card_dic(own_dict)
+        self.cards_in_deck = self.my_cards
+        self.deck_rect = Rectangle((245*0.75,324*0.75),(width-100,height-150),(0,0,0),"back_oc.png")
+        self.shown_cards = []
+
+    def shuffle_deck(self):
+        random.shuffle(self.cards_in_deck)
+
+    def get_image_without_number(self,image):
+        l_image = list(image)
+        l_image[-1] = ""
+        image = ""
+        for i in l_image:
+            image += i
+        return image
+
+    def draw_card(self):
+        self.shown_cards.append(Rectangle((245*0.75,324*0.75),(width-300,height-150),(0,0,0),self.get_image_without_number(self.cards_in_deck[0])))
+        del self.cards_in_deck[0]
+
     def main_loop(self):
         while self.running:
             screen.fill((100,100,125))
             #update things
+            self.deck_rect.update(screen)
+            for card in self.shown_cards:
+                card.update(screen)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
-                        pass
+                    if event.key == pygame.K_p:
+                        if self.deck_rect.get_point_collide(pygame.mouse.get_pos()):
+                            self.draw_card()
+                    if event.key == pygame.K_s:
+                        self.shuffle_deck()
+                        
+
             pygame.display.update()
 
-my_game = game(action)
+my_game = game(action,own_cards_dict)
 my_game.main_loop()
 
         
