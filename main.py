@@ -110,4 +110,6 @@ for file in files:
         deck_info_own = file
 #getting the dict from it:
 own_cards_dict = get_dict_from_deck_info(deck_info_own)
+v = {'arvid_charzard_deck0.png': '3', 'arvid_charzard_deck1.png': '1', 'arvid_charzard_deck10.png': '1', 'arvid_charzard_deck11.png': '2', 'arvid_charzard_deck12.png': '4', 'arvid_charzard_deck13.png': '2', 'arvid_charzard_deck14.png': '1', 'arvid_charzard_deck15.png': '1', 'arvid_charzard_deck16.png': '1', 'arvid_charzard_deck17.png': '3', 'arvid_charzard_deck18.png': '2', 'arvid_charzard_deck19.png': '3', 'arvid_charzard_deck2.png': '1', 'arvid_charzard_deck20.png': '4', 'arvid_charzard_deck21.png': '1', 'arvid_charzard_deck22.png': '10', 'arvid_charzard_deck23.png': '1', 'arvid_charzard_deck24.png': '1', 'arvid_charzard_deck25.png': '1', 'arvid_charzard_deck3.png': '4', 'arvid_charzard_deck4.png': '1', 'arvid_charzard_deck5.png': '2', 'arvid_charzard_deck6.png': '3', 'arvid_charzard_deck7.png': '1', 'arvid_charzard_deck8.png': '4', 'arvid_charzard_deck9.png': '2'}
+print(own_cards_dict==v)
 action = actions()
