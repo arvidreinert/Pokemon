@@ -70,32 +70,44 @@ class actions():
     def shuffle_deck():
         pass
 
+def get_dict_from_deck_info(name):
+    deck_info_own = name
+    file = open(deck_info_own, "r")
+    card_dict,content = file.readline().split("=")
+
+    deck_info_own = content
+    test_dic = {}
+    x = deck_info_own.split(",")
+    x[0] = list(x[0])
+    del x[0][0]
+    t = ""
+    for i in x[0]:
+        t += i
+    x[0] = t
+
+    x[-1] = list(x[-1])
+    del x[-1][-1]
+    t = ""
+    for i in x[-1]:
+        t += i
+    x[-1] = t
+
+    for element in x:
+        key,value = element.split(":")
+        key = key.replace("'","")
+        key = key.replace(" ","")
+        value = value.replace("'","")
+        value = value.replace(" ","")
+
+        test_dic[key] = value
+    return test_dic
+
+#getting how the own safe file is called:
 deck_info_own = ""
 files = os.listdir()
 for file in files:
     if "Deck_info_" in file and "opponent" not in file:
         deck_info_own = file
-
-file = open(deck_info_own, "r")
-card_dict,content = file.readline().split("=")
-
-deck_info_own = content
-test_dic = {}
-x = deck_info_own.split(",")
-x[0] = list(x[0])
-print(x[0])
-del x[0][0]
-print(x[0])
-t = ""
-for i in x[0]:
-    t += i
-x[0] = t
-
-x[-1] = list(x[-1])
-del x[-1][-1]
-t = ""
-for i in x[-1]:
-    t += i
-x[-1] = t
-
+#getting the dict from it:
+own_cards_dict = get_dict_from_deck_info(deck_info_own)
 action = actions()
