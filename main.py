@@ -61,11 +61,21 @@ if info_text == False:
 
 #now here the real code starts:
 class actions():
-    def __init__(self):
-        self.my_cards = {}
+    def __init__(self,own_card_dic):
+        self.my_cards = own_cards_dict
         #print(self.my_cards,type(self.my_cards))
 
-                
+    def make_list_from_card_dic(self,card_dic):
+        card_list = []
+        listed_dic = list(card_dic)
+        for key in listed_dic:
+            print(card_dic[key])
+            if card_dic[key] == 1:
+                card_list.append(f"{key}1")
+            else:
+                for i in range(0,int(card_dic[key])):
+                    card_list.append(f"{key}{i}")
+        return card_list
 
     def shuffle_deck():
         pass
@@ -110,6 +120,5 @@ for file in files:
         deck_info_own = file
 #getting the dict from it:
 own_cards_dict = get_dict_from_deck_info(deck_info_own)
-v = {'arvid_charzard_deck0.png': '3', 'arvid_charzard_deck1.png': '1', 'arvid_charzard_deck10.png': '1', 'arvid_charzard_deck11.png': '2', 'arvid_charzard_deck12.png': '4', 'arvid_charzard_deck13.png': '2', 'arvid_charzard_deck14.png': '1', 'arvid_charzard_deck15.png': '1', 'arvid_charzard_deck16.png': '1', 'arvid_charzard_deck17.png': '3', 'arvid_charzard_deck18.png': '2', 'arvid_charzard_deck19.png': '3', 'arvid_charzard_deck2.png': '1', 'arvid_charzard_deck20.png': '4', 'arvid_charzard_deck21.png': '1', 'arvid_charzard_deck22.png': '10', 'arvid_charzard_deck23.png': '1', 'arvid_charzard_deck24.png': '1', 'arvid_charzard_deck25.png': '1', 'arvid_charzard_deck3.png': '4', 'arvid_charzard_deck4.png': '1', 'arvid_charzard_deck5.png': '2', 'arvid_charzard_deck6.png': '3', 'arvid_charzard_deck7.png': '1', 'arvid_charzard_deck8.png': '4', 'arvid_charzard_deck9.png': '2'}
-print(own_cards_dict==v)
-action = actions()
+action = actions(own_cards_dict)
+print(action.make_list_from_card_dic(own_cards_dict))
