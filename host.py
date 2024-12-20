@@ -8,7 +8,15 @@ s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.bind((HOST, PORT))
 while True:
     data,addr = s.recvfrom(4096)
-    print(pickle.loads(data),addr)
+    data = pickle.loads(data)
+    if data == "break":
+        print("shutting down server")
+        break
+
+    if data == "login":
+        players_connected[addr] = data
+        print(players_connected)
+
     """if data == b"get_me_the_others_location":
         for address in players_connected:
             if address != addr:

@@ -1,5 +1,6 @@
 from setup import *
 from rectangle import *
+from online_stuff import *
 import os
 
 images = os.listdir()
@@ -123,7 +124,8 @@ action = actions(own_cards_dict)
 #print(action.make_list_from_card_dic(own_cards_dict))
 
 class game():
-    def __init__(self,action_class,own_dict):
+    def __init__(self,action_class,own_dict,server):
+        self.server = server
         self.action = action_class
         self.running = True
         self.my_cards = action.make_list_from_card_dic(own_dict)
@@ -163,9 +165,12 @@ class game():
                             self.draw_card()
                     if event.key == pygame.K_s:
                         self.shuffle_deck()
+                    if event.key == pygame.K_ESCAPE:
+                        self.server.send("break")
                         
 
             pygame.display.update()
 
-my_game = game(action,own_cards_dict)
+server = server_manager()
+my_game = game(action,own_cards_dict,server)
 my_game.main_loop()       
