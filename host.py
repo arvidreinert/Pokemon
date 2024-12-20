@@ -21,6 +21,10 @@ while True:
     if data == "req peer online":
         l = len(list(players_connected))
         s.sendto(pickle.dumps(str(l)), addr)
+    
+    if data == "req clients turn":
+        l = list(players_connected)
+        s.sendto(pickle.dumps(str(l.index(addr)==0)), addr)
 
 
     """if data == b"get_me_the_others_location":

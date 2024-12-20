@@ -132,6 +132,8 @@ class game():
         self.cards_in_deck = self.my_cards
         self.deck_rect = Rectangle((245*0.75,324*0.75),(width-100,height-150),(0,0,0),"back_oc.png")
         self.deck_opponent_rect = Rectangle((245*0.75,324*0.75),(100,150),(0,0,0),"back_oc.png")
+        self.your_turn_rect = Rectangle((100,100),(100,0),(0,0,255))
+        self.your_turn = None
         self.deck_opponent_rect.is_updating = False
         self.shown_cards = []
 
@@ -156,13 +158,24 @@ class game():
             if players_count <= 1:
                 players_count = self.server.send_and_listen("req peer online")
                 players_count = int(players_count)
-                if players_count >= 2:
-                    self.deck_opponent_rect.is_updating = True
+
+            if players_count >= 2 and self.your_turn == None:
+                self.deck_opponent_rect.is_updating = True
+                mt = self.server.send_and_listen("req clients turn")
+                self.your_turn = mt
+                print(self.your_turn)
+
 
             screen.fill((100,100,125))
             #update things
             self.deck_rect.update(screen)
             self.deck_opponent_rect.update(screen)
+            if self.your_turn == "True":
+                self.your_turn_rect.fill_rect_with_color((0,255,0))
+            if self.your_turn == "False":
+                self.your_turn_rect.fill_rect_with_color((255,0,0))
+
+            self.your_turn_rect.update(screen)
             for card in self.shown_cards:
                 card.update(screen)
 
