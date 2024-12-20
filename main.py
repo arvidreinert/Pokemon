@@ -69,7 +69,6 @@ class actions():
         card_list = []
         listed_dic = list(card_dic)
         for key in listed_dic:
-            print(card_dic[key])
             if card_dic[key] == 1:
                 card_list.append(f"{key}1")
             else:
