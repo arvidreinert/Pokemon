@@ -132,7 +132,7 @@ class game():
         self.cards_in_deck = self.my_cards
         self.deck_rect = Rectangle((245*0.75,324*0.75),(width-100,height-150),(0,0,0),"back_oc.png")
         self.deck_opponent_rect = Rectangle((245*0.75,324*0.75),(100,150),(0,0,0),"back_oc.png")
-        self.your_turn_rect = Rectangle((100,100),(100,0),(0,0,255))
+        self.your_turn_rect = Rectangle((100,100),(150,height/2),(0,0,255))
         self.your_turn = None
         self.deck_opponent_rect.is_updating = False
         self.shown_cards = []
