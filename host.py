@@ -17,6 +17,11 @@ while True:
         players_connected[addr] = data
         print(players_connected)
         s.sendto(pickle.dumps("logged in succesfull"), addr)
+    
+    if data == "req peer online":
+        l = len(list(players_connected))
+        s.sendto(pickle.dumps(str(l)), addr)
+
 
     """if data == b"get_me_the_others_location":
         for address in players_connected:

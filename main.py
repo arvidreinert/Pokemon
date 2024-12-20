@@ -131,6 +131,8 @@ class game():
         self.my_cards = action.make_list_from_card_dic(own_dict)
         self.cards_in_deck = self.my_cards
         self.deck_rect = Rectangle((245*0.75,324*0.75),(width-100,height-150),(0,0,0),"back_oc.png")
+        self.deck_opponent_rect = Rectangle((245*0.75,324*0.75),(100,150),(0,0,0),"back_oc.png")
+        self.deck_opponent_rect.is_updating = False
         self.shown_cards = []
 
     def shuffle_deck(self):
@@ -149,10 +151,18 @@ class game():
         del self.cards_in_deck[0]
 
     def main_loop(self):
+        players_count = 0
         while self.running:
+            if players_count <= 1:
+                players_count = self.server.send_and_listen("req peer online")
+                players_count = int(players_count)
+                if players_count >= 2:
+                    self.deck_opponent_rect.is_updating = True
+
             screen.fill((100,100,125))
             #update things
             self.deck_rect.update(screen)
+            self.deck_opponent_rect.update(screen)
             for card in self.shown_cards:
                 card.update(screen)
 
@@ -168,7 +178,6 @@ class game():
                     if event.key == pygame.K_ESCAPE:
                         self.server.send("break")
                         
-
             pygame.display.update()
 
 server = server_manager()
