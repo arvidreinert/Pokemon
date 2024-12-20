@@ -168,6 +168,4 @@ class game():
             pygame.display.update()
 
 my_game = game(action,own_cards_dict)
-my_game.main_loop()
-
-        
+my_game.main_loop()       
