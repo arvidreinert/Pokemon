@@ -7,7 +7,11 @@ class server_manager():
     def __init__(self):
         self.server_s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.server_s.connect((HOST, PORT))
-        self.send("login")
+        answer = self.send_and_listen("login")
+        if answer == "logged in succesfull":
+            print("good")
+        else:
+            print("Fatal error!")
 
     def send(self,msg):
         msg = pickle.dumps(msg)

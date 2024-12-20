@@ -16,6 +16,7 @@ while True:
     if data == "login":
         players_connected[addr] = data
         print(players_connected)
+        s.sendto(pickle.dumps("logged in succesfull"), addr)
 
     """if data == b"get_me_the_others_location":
         for address in players_connected:
