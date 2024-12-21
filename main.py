@@ -135,7 +135,7 @@ class game():
         self.your_turn_rect = Rectangle((100,100),(150,height/2),(0,0,255))
         self.your_turn = None
         self.deck_opponent_rect.is_updating = False
-        self.shown_cards = []
+        self.shown_cards = {}
 
     def shuffle_deck(self):
         random.shuffle(self.cards_in_deck)
@@ -149,7 +149,8 @@ class game():
         return image
 
     def draw_card(self):
-        self.shown_cards.append(Rectangle((245*0.75,324*0.75),(width-300,height-150),(0,0,0),self.get_image_without_number(self.cards_in_deck[0])))
+        l = len(list(self.shown_cards))
+        self.shown_cards[f"card{l}"] = Rectangle((245*0.75,324*0.75),(width-300,height-150),(0,0,0),self.get_image_without_number(self.cards_in_deck[0]))
         del self.cards_in_deck[0]
 
     def main_loop(self):
@@ -176,8 +177,9 @@ class game():
                 self.your_turn_rect.fill_rect_with_color((255,0,0))
 
             self.your_turn_rect.update(screen)
-            for card in self.shown_cards:
-                card.update(screen)
+            listed_s_c = list(self.shown_cards)
+            for card in listed_s_c:
+                self.shown_cards[card].update(screen)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
