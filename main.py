@@ -130,8 +130,8 @@ class game():
         self.running = True
         self.my_cards = action.make_list_from_card_dic(own_dict)
         self.cards_in_deck = self.my_cards
-        self.deck_rect = Rectangle((245*0.75,324*0.75),(width-100,height-150),(0,0,0),"back_oc.png")
-        self.deck_opponent_rect = Rectangle((245*0.75,324*0.75),(100,150),(0,0,0),"back_oc.png")
+        self.deck_rect = Rectangle((245*0.75,324*0.75),(width-100,height-350),(0,0,0),"back_oc.png")
+        self.deck_opponent_rect = Rectangle((245*0.75,324*0.75),(100,350),(0,0,0),"back_oc.png")
         self.your_turn_rect = Rectangle((100,100),(150,height/2),(0,0,255))
         self.your_turn = None
         self.deck_opponent_rect.is_updating = False
@@ -150,7 +150,7 @@ class game():
 
     def draw_card(self):
         l = len(list(self.shown_cards))
-        self.shown_cards[f"card{l}"] = Rectangle((245*0.75,324*0.75),(width-300,height-150),(0,0,0),self.get_image_without_number(self.cards_in_deck[0]))
+        self.shown_cards[f"card{l}"] = Rectangle((245*0.65,324*0.65),(width-300,height-150),(0,0,0),self.get_image_without_number(self.cards_in_deck[0]))
         self.flip_card(f"card{l}")
         del self.cards_in_deck[0]
 
@@ -164,6 +164,7 @@ class game():
 
     def main_loop(self):
         players_count = 0
+        selected_card = False
         while self.running:
             if players_count <= 1:
                 players_count = self.server.send_and_listen("req peer online")
@@ -185,6 +186,9 @@ class game():
             if self.your_turn == "False":
                 self.your_turn_rect.fill_rect_with_color((255,0,0))
 
+            if selected_card != False:
+                m_pos = pygame.mouse.get_pos()
+                self.shown_cards[selected_card].set_position(m_pos[0],m_pos[1])
             self.your_turn_rect.update(screen)
             listed_s_c = list(self.shown_cards)
             for card in listed_s_c:
@@ -208,6 +212,15 @@ class game():
                         for card in listed_s_c:
                             if self.shown_cards[card].get_point_collide(pygame.mouse.get_pos()):
                                 self.flip_card(card)
+
+                    if event.button == 1:
+                        listed_s_c = list(self.shown_cards)
+                        for card in listed_s_c:
+                            if self.shown_cards[card].get_point_collide(pygame.mouse.get_pos()):
+                                if card == selected_card:
+                                    selected_card = False
+                                else:
+                                    selected_card = card
 
             pygame.display.update()
 
