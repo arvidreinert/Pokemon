@@ -151,7 +151,16 @@ class game():
     def draw_card(self):
         l = len(list(self.shown_cards))
         self.shown_cards[f"card{l}"] = Rectangle((245*0.75,324*0.75),(width-300,height-150),(0,0,0),self.get_image_without_number(self.cards_in_deck[0]))
+        self.flip_card(f"card{l}")
         del self.cards_in_deck[0]
+
+    def flip_card(self,card_name):
+        if not self.shown_cards[str(card_name)].flipped:
+            self.shown_cards[str(card_name)].set_image(self.shown_cards[str(card_name)].unloaded_image,False)
+            self.shown_cards[str(card_name)].flipped = True
+        else:
+            self.shown_cards[str(card_name)].set_image("back_oc.png",False)
+            self.shown_cards[str(card_name)].flipped = False
 
     def main_loop(self):
         players_count = 0
@@ -192,7 +201,14 @@ class game():
                         self.shuffle_deck()
                     if event.key == pygame.K_ESCAPE:
                         self.server.send("break")
-                        
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 3:
+                        listed_s_c = list(self.shown_cards)
+                        for card in listed_s_c:
+                            if self.shown_cards[card].get_point_collide(pygame.mouse.get_pos()):
+                                self.flip_card(card)
+
             pygame.display.update()
 
 server = server_manager()

@@ -11,6 +11,8 @@ class Rectangle():
         self.position = position
         self.transparency = 255
         self.color = color
+        #for the pokemon game True is the front side and False the back side
+        self.flipped = True
         
         if image == False:
             self.original_rect = pygame.Surface(size)
