@@ -30,11 +30,12 @@ while True:
 
     if "actio" in data:
         l = list(players_connected)
-        print(data)
+        print(data.split(";"))
+        #output: ['actio', "['create:card0,arvid_charzard_deck0.png,arvid_charzard_deck0.png0']"]
         if addr == l[0]:
-            actions_receveid = (l[1],data.split(":")[1])
+            actions_receveid = (l[1],data.split(";")[1])
         elif addr == l[1]:
-            actions_receveid = (l[0],data.split(":")[1])
+            actions_receveid = (l[0],data.split(";")[1])
 
     if data == "req:actio":
         if actions_receveid == (False,False):
