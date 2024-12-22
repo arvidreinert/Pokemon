@@ -137,6 +137,7 @@ class game():
         self.deck_opponent_rect.is_updating = False
         self.shown_cards = {}
         self.defeated_cards = []
+        self.actions = []
 
     def shuffle_deck(self):
         random.shuffle(self.cards_in_deck)
@@ -153,6 +154,8 @@ class game():
         l = len(list(self.shown_cards))
         self.shown_cards[f"card{l}"] = Rectangle((245*0.65,324*0.65),(width-300,height-400),(0,0,0),self.get_image_without_number(self.cards_in_deck[0]),cards_full_name=self.cards_in_deck[0])
         self.flip_card(f"card{l}")
+        #the command to make a card with the attributes name,original image,the cards full name
+        self.actions.append(f"create:card{l},{self.get_image_without_number(self.cards_in_deck[0])},{self.cards_in_deck[0]}")
         del self.cards_in_deck[0]
 
     def flip_card(self,card_name):
@@ -223,6 +226,12 @@ class game():
                                 self.shown_cards[selected_card] = Rectangle((245*1.1,324*1.1),(width-300,height-400),(0,0,0),self.shown_cards[selected_card].unloaded_image,cards_full_name=self.shown_cards[selected_card].cardsfn)
                             else:
                                 self.shown_cards[selected_card] = Rectangle((245*0.65,324*0.65),(width-300,height-400),(0,0,0),self.shown_cards[selected_card].unloaded_image,cards_full_name=self.shown_cards[selected_card].cardsfn)
+                    if event.key == pygame.K_RIGHT:
+                        if selected_card != False:
+                            self.shown_cards[selected_card].change_rotation(-90)
+                    if event.key == pygame.K_LEFT:
+                        if selected_card != False:
+                            self.shown_cards[selected_card].change_rotation(90)
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 3:
@@ -233,12 +242,15 @@ class game():
 
                     if event.button == 1:
                         listed_s_c = list(self.shown_cards)
+                        pre_sel = selected_card
+                        if selected_card != False:
+                            selected_card = False
+                        #complicated way of handling selecting and unselecting cards
                         for card in listed_s_c:
                             if self.shown_cards[card].get_point_collide(pygame.mouse.get_pos()):
-                                if card == selected_card:
-                                    selected_card = False
-                                else:
-                                    selected_card = card
+                                    if selected_card == False and not pre_sel == card:
+                                        selected_card = card
+                                    
 
             pygame.display.update()
 
