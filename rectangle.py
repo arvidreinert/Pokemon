@@ -2,7 +2,8 @@ from setup import *
 import pygame
 
 class Rectangle():
-    def __init__(self, size, position, color, image=False,z_position=0):
+    def __init__(self, size, position, color, image=False,z_position=0,cards_full_name=""):
+        self.cardsfn = cards_full_name
         self.image_path = image
         self.rotation = 0
         self.z_position = z_position

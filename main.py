@@ -136,6 +136,7 @@ class game():
         self.your_turn = None
         self.deck_opponent_rect.is_updating = False
         self.shown_cards = {}
+        self.defeated_cards = []
 
     def shuffle_deck(self):
         random.shuffle(self.cards_in_deck)
@@ -150,7 +151,7 @@ class game():
 
     def draw_card(self):
         l = len(list(self.shown_cards))
-        self.shown_cards[f"card{l}"] = Rectangle((245*0.65,324*0.65),(width-300,height-150),(0,0,0),self.get_image_without_number(self.cards_in_deck[0]))
+        self.shown_cards[f"card{l}"] = Rectangle((245*0.65,324*0.65),(width-300,height-150),(0,0,0),self.get_image_without_number(self.cards_in_deck[0]),cards_full_name=self.cards_in_deck[0])
         self.flip_card(f"card{l}")
         del self.cards_in_deck[0]
 
@@ -186,9 +187,14 @@ class game():
             if self.your_turn == "False":
                 self.your_turn_rect.fill_rect_with_color((255,0,0))
 
+            #moving the selected card:
             if selected_card != False:
                 m_pos = pygame.mouse.get_pos()
                 self.shown_cards[selected_card].set_position(m_pos[0],m_pos[1])
+                if self.shown_cards[selected_card].get_point_collide((width-10,height-10)):
+                    self.shown_cards[selected_card].kill()
+                    #how to get the exact name of the card print(self.shown_cards[selected_card].cardsfn)
+
             self.your_turn_rect.update(screen)
             listed_s_c = list(self.shown_cards)
             for card in listed_s_c:
