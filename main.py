@@ -151,7 +151,7 @@ class game():
 
     def draw_card(self):
         l = len(list(self.shown_cards))
-        self.shown_cards[f"card{l}"] = Rectangle((245*0.65,324*0.65),(width-300,height-150),(0,0,0),self.get_image_without_number(self.cards_in_deck[0]),cards_full_name=self.cards_in_deck[0])
+        self.shown_cards[f"card{l}"] = Rectangle((245*0.65,324*0.65),(width-300,height-400),(0,0,0),self.get_image_without_number(self.cards_in_deck[0]),cards_full_name=self.cards_in_deck[0])
         self.flip_card(f"card{l}")
         del self.cards_in_deck[0]
 
@@ -193,6 +193,8 @@ class game():
                 self.shown_cards[selected_card].set_position(m_pos[0],m_pos[1])
                 if self.shown_cards[selected_card].get_point_collide((width-10,height-10)):
                     self.shown_cards[selected_card].kill()
+                    #the defeated card must be updated:
+                    self.defeated_cards.append(self.shown_cards[selected_card].cardsfn)
                     #how to get the exact name of the card print(self.shown_cards[selected_card].cardsfn)
 
             self.your_turn_rect.update(screen)
@@ -211,6 +213,16 @@ class game():
                         self.shuffle_deck()
                     if event.key == pygame.K_ESCAPE:
                         self.server.send("break")
+                    if event.key == pygame.K_z:
+                        if selected_card != False:
+                            listed_s_c = list(self.shown_cards)
+                            self.shown_cards[listed_s_c[-1]], self.shown_cards[selected_card] = self.shown_cards[selected_card],self.shown_cards[listed_s_c[-1]]
+                            listed_s_c = list(self.shown_cards)
+                            selected_card = listed_s_c[-1]
+                            if self.shown_cards[selected_card].size == (245*0.65,324*0.65):
+                                self.shown_cards[selected_card] = Rectangle((245*1.1,324*1.1),(width-300,height-400),(0,0,0),self.shown_cards[selected_card].unloaded_image,cards_full_name=self.shown_cards[selected_card].cardsfn)
+                            else:
+                                self.shown_cards[selected_card] = Rectangle((245*0.65,324*0.65),(width-300,height-400),(0,0,0),self.shown_cards[selected_card].unloaded_image,cards_full_name=self.shown_cards[selected_card].cardsfn)
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 3:
