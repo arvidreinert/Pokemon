@@ -6,6 +6,8 @@ PORT = 9000
 players_connected = {}
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.bind((HOST, PORT))
+#to who, what
+actions_receveid = (False,False)
 while True:
     data,addr = s.recvfrom(4096)
     data = pickle.loads(data)
@@ -26,6 +28,18 @@ while True:
         l = list(players_connected)
         s.sendto(pickle.dumps(str(l.index(addr)==0)), addr)
 
+    if "actio" in data:
+        l = list(players_connected)
+        if addr == l[0]:
+            actions_receveid = (l[1],data.split(":")[1])
+        elif addr == l[1]:
+            actions_receveid = (l[0],data.split(":")[1])
+
+    if data == "req:actio":
+        if actions_receveid == (False,False):
+            s.sendto(pickle.dumps("False"), addr)
+        else:
+            s.sendto(pickle.dumps(actions_receveid[1]), addr)
 
     """if data == b"get_me_the_others_location":
         for address in players_connected:
