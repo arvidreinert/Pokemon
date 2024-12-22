@@ -30,6 +30,7 @@ while True:
 
     if "actio" in data:
         l = list(players_connected)
+        print(data)
         if addr == l[0]:
             actions_receveid = (l[1],data.split(":")[1])
         elif addr == l[1]:
@@ -39,7 +40,9 @@ while True:
         if actions_receveid == (False,False):
             s.sendto(pickle.dumps("False"), addr)
         else:
+            print(actions_receveid)
             s.sendto(pickle.dumps(actions_receveid[1]), addr)
+            print(actions_receveid[0])
 
     """if data == b"get_me_the_others_location":
         for address in players_connected:

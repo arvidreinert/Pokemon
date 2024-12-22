@@ -254,7 +254,8 @@ class game():
                             if self.shown_cards[card].get_point_collide(pygame.mouse.get_pos()):
                                     if selected_card == False and not pre_sel == card:
                                         selected_card = card
-                        if self.your_turn_rect.get_point_collide(event.pos()) and self.your_turn == "True":
+                        if self.your_turn_rect.get_point_collide(pygame.mouse.get_pos()) and self.your_turn == "True":
+                            print(self.actions)
                             server.send(f"actio:{self.actions}")
 
             pygame.display.update()
