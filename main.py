@@ -301,6 +301,6 @@ class game():
 
             pygame.display.update()
 
-server = server_manager()
+server = server_manager(ip)
 my_game = game(action,own_cards_dict,server)
 my_game.main_loop()       

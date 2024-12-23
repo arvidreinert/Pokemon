@@ -1,12 +1,10 @@
 import pickle
 import socket
-HOST = "127.0.0.1"
 PORT = 9000
-
 class server_manager():
-    def __init__(self):
+    def __init__(self,ip):
         self.server_s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.server_s.connect((HOST, PORT))
+        self.server_s.connect((ip, PORT))
         answer = self.send_and_listen("login")
         if answer == "logged in succesfull":
             print("good")
