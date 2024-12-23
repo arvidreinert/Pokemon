@@ -13,7 +13,7 @@ PORT = 9000
 players_connected = {}
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.bind(("0.0.0.0", PORT))
-print(f"server: {ip}")
+print(f"server: {hn}.local ({ip})")
 #to who, what
 actions_receveid = "False"
 while True:
