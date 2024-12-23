@@ -3,7 +3,7 @@ from screeninfo import get_monitors
 import pygame, sys,random, math
 
 #initialyse the module:
-ip = input("address:")
+ip = input("address: ")
 pygame.init()
 pygame.joystick.init()
 my_screens = get_monitors()
