@@ -165,6 +165,22 @@ class game():
         else:
             self.shown_cards[str(card_name)].set_image("back_oc.png",False)
             self.shown_cards[str(card_name)].flipped = False
+    def transform_the_position(self,pos=(width-300,height-400)):
+        #a function to place the opponents cards on the right place:
+        new_pos = (width-pos[0],height-pos[1])
+        return new_pos
+    
+    def decode(self,data_string=""):
+        #this function can decode the information that was sent by the server into the games actions:
+        splitted = data_string.split(":")
+        action_name = splitted[0]
+        action_info_string = splitted[1]
+        action_info_list = action_info_string.split(",")
+        print(action_info_list,action_name)
+        if action_name == "create":
+            self.shown_cards[action_info_list[0]] = Rectangle((245*0.65,324*0.65),self.transform_the_position((width-300,height-400)),(0,0,0),action_info_list[1],cards_full_name=action_info_list[2])
+            self.flip_card(action_info_list[0])
+        self.your_turn = "True"
 
     def main_loop(self):
         players_count = 0
@@ -184,7 +200,7 @@ class game():
                     answ = ""
                     for b in l_answ:
                         answ += b
-                    print(answ)
+                    self.decode(answ)
 
             if players_count <= 1:
                 players_count = self.server.send_and_listen("req peer online")
@@ -268,6 +284,7 @@ class game():
                                         selected_card = card
                         if self.your_turn_rect.get_point_collide(pygame.mouse.get_pos()) and self.your_turn == "True":
                             server.send(f"actio;{self.actions}")
+                            self.your_turn = "False"
 
             pygame.display.update()
 
