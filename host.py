@@ -12,9 +12,8 @@ for a in ai:
 PORT = 9000 
 players_connected = {}
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.bind((ip, PORT))
-host_addr = s.getsockname()
-print(f"server: {host_addr[0]}:{host_addr[1]}")
+s.bind(("0.0.0.0", PORT))
+print(f"server: {ip}")
 #to who, what
 actions_receveid = "False"
 while True:
