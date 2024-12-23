@@ -170,10 +170,22 @@ class game():
         players_count = 0
         selected_card = False
         while self.running:
+            #turn managing
             if self.your_turn == "False":
                 answ = server.send_and_listen("req:actio")
                 if not answ == "False":
+                    l_answ = list(answ)
+                    del l_answ[0],l_answ[-1]
+                    answ = ""
+                    for b in l_answ:
+                        answ += b
+                    l_answ = list(answ)
+                    del l_answ[0],l_answ[-1]
+                    answ = ""
+                    for b in l_answ:
+                        answ += b
                     print(answ)
+
             if players_count <= 1:
                 players_count = self.server.send_and_listen("req peer online")
                 players_count = int(players_count)
@@ -255,7 +267,6 @@ class game():
                                     if selected_card == False and not pre_sel == card:
                                         selected_card = card
                         if self.your_turn_rect.get_point_collide(pygame.mouse.get_pos()) and self.your_turn == "True":
-                            print(self.actions)
                             server.send(f"actio;{self.actions}")
 
             pygame.display.update()

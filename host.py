@@ -7,7 +7,7 @@ players_connected = {}
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.bind((HOST, PORT))
 #to who, what
-actions_receveid = (False,False)
+actions_receveid = "False"
 while True:
     data,addr = s.recvfrom(4096)
     data = pickle.loads(data)
@@ -28,22 +28,19 @@ while True:
         l = list(players_connected)
         s.sendto(pickle.dumps(str(l.index(addr)==0)), addr)
 
-    if "actio" in data:
-        l = list(players_connected)
+    if "actio;" in data:
+        print(data)
         print(data.split(";"))
         #output: ['actio', "['create:card0,arvid_charzard_deck0.png,arvid_charzard_deck0.png0']"]
-        if addr == l[0]:
-            actions_receveid = (l[1],data.split(";")[1])
-        elif addr == l[1]:
-            actions_receveid = (l[0],data.split(";")[1])
+        actions_receveid = data.split(";")[1]
+        print(actions_receveid)
 
     if data == "req:actio":
-        if actions_receveid == (False,False):
+        print(actions_receveid)
+        if actions_receveid == "False":
             s.sendto(pickle.dumps("False"), addr)
         else:
-            print(actions_receveid)
-            s.sendto(pickle.dumps(actions_receveid[1]), addr)
-            print(actions_receveid[0])
+            s.sendto(pickle.dumps(actions_receveid), addr)
 
     """if data == b"get_me_the_others_location":
         for address in players_connected:
