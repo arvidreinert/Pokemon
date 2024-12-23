@@ -41,6 +41,7 @@ while True:
             s.sendto(pickle.dumps("False"), addr)
         else:
             s.sendto(pickle.dumps(actions_receveid), addr)
+            actions_receveid = "False"
 
     """if data == b"get_me_the_others_location":
         for address in players_connected:

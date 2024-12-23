@@ -181,6 +181,7 @@ class game():
             self.shown_cards[action_info_list[0]] = Rectangle((245*0.65,324*0.65),self.transform_the_position((width-300,height-400)),(0,0,0),action_info_list[1],cards_full_name=action_info_list[2])
             self.flip_card(action_info_list[0])
         self.your_turn = "True"
+        print("turn executed")
 
     def main_loop(self):
         players_count = 0
@@ -285,6 +286,7 @@ class game():
                         if self.your_turn_rect.get_point_collide(pygame.mouse.get_pos()) and self.your_turn == "True":
                             server.send(f"actio;{self.actions}")
                             self.your_turn = "False"
+                            print("turn submitted")
 
             pygame.display.update()
 
