@@ -155,7 +155,7 @@ class game():
         self.shown_cards[f"card{l}"] = Rectangle((245*0.65,324*0.65),(width-300,height-400),(0,0,0),self.get_image_without_number(self.cards_in_deck[0]),cards_full_name=self.cards_in_deck[0])
         self.flip_card(f"card{l}")
         #the command to make a card with the attributes name,original image,the cards full name
-        self.actions.append(f"create:card{l},{self.get_image_without_number(self.cards_in_deck[0])},{self.cards_in_deck[0]}")
+        self.actions.append(f"create:card{l}*{self.get_image_without_number(self.cards_in_deck[0])}*{self.cards_in_deck[0]}")
         del self.cards_in_deck[0]
 
     def flip_card(self,card_name):
@@ -175,7 +175,7 @@ class game():
         splitted = data_string.split(":")
         action_name = splitted[0]
         action_info_string = splitted[1]
-        action_info_list = action_info_string.split(",")
+        action_info_list = action_info_string.split("*")
         print(action_info_list,action_name)
         if action_name == "create":
             self.shown_cards[action_info_list[0]] = Rectangle((245*0.65,324*0.65),self.transform_the_position((width-300,height-400)),(0,0,0),action_info_list[1],cards_full_name=action_info_list[2])
@@ -186,10 +186,13 @@ class game():
     def main_loop(self):
         players_count = 0
         selected_card = False
+        selected_card_position_befor = ()
+        selected_card_position_after = ()
         while self.running:
             #turn managing
             if self.your_turn == "False":
                 answ = server.send_and_listen("req:actio")
+                print(answ,"answ")
                 if not answ == "False":
                     l_answ = list(answ)
                     del l_answ[0],l_answ[-1]
@@ -201,6 +204,7 @@ class game():
                     answ = ""
                     for b in l_answ:
                         answ += b
+                    print(answ)
                     self.decode(answ)
 
             if players_count <= 1:
@@ -277,12 +281,16 @@ class game():
                         listed_s_c = list(self.shown_cards)
                         pre_sel = selected_card
                         if selected_card != False:
+                            selected_card_position_after = self.shown_cards[selected_card].get_pos()
                             selected_card = False
+                            self.actions.append(f"move:{selected_card},{selected_card_position_after}")
+
                         #complicated way of handling selecting and unselecting cards
                         for card in listed_s_c:
                             if self.shown_cards[card].get_point_collide(pygame.mouse.get_pos()):
                                     if selected_card == False and not pre_sel == card:
                                         selected_card = card
+                                        selected_card_position_befor = self.shown_cards[card].get_pos()
                         if self.your_turn_rect.get_point_collide(pygame.mouse.get_pos()) and self.your_turn == "True":
                             server.send(f"actio;{self.actions}")
                             self.your_turn = "False"
