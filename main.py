@@ -189,7 +189,10 @@ class game():
             if action_name == "move":
                 print(action_info_list)
                 x,y = action_info_list[1].split("/")
-                self.shown_cards[action_info_list[0]].set_position(x,y)
+                x,y = x.replace("(",""),y.replace(")","")
+                pos = (x,y)
+                pos = self.transform_the_position((int(x),int(y)))
+                self.shown_cards[action_info_list[0]].set_position(pos[0],pos[1])
 
             self.your_turn = "True"
         print("turn executed")
