@@ -172,18 +172,26 @@ class game():
     
     def decode(self,data_string=""):
         #this function can decode the information that was sent by the server into the games actions:
-        splitted = data_string.split(":")
-        action_name = splitted[0]
-        action_info_string = splitted[1]
-        action_info_list = action_info_string.split("*")
-        print(action_info_list,action_name,data_string)
-        if action_name == "create":
-            self.shown_cards[action_info_list[0]] = Rectangle((245*0.65,324*0.65),self.transform_the_position((width-300,height-400)),(0,0,0),action_info_list[1],cards_full_name=action_info_list[2])
-            self.flip_card(action_info_list[0])
-        if action_name == "move":
-            self.shown_cards[action_info_list[0]].set_position(action_info_list[1])
+        data_string = data_string.replace("'","")
+        all_actions = data_string.split(", ")
+        for action in all_actions:
+            print("action:",action)
+            splitted = data_string.split(":")
+            for split in splitted:
+                splitted[splitted.index(split)-1] = split.replace("'","")
+            print("splitted:", splitted)
+            action_name = splitted[0]
+            action_info_string = splitted[1]
+            action_info_list = action_info_string.split("*")
+            print(action_name)
+            if action_name == "create":
+                self.shown_cards[action_info_list[0]] = Rectangle((245*0.65,324*0.65),self.transform_the_position((width-300,height-400)),(0,0,0),action_info_list[1],cards_full_name=action_info_list[2])
+                self.flip_card(action_info_list[0])
+            if action_name == "move":
+                print(action_info_list)
+                self.shown_cards[action_info_list[0]].set_position(action_info_list[1])
 
-        self.your_turn = "True"
+            self.your_turn = "True"
         print("turn executed")
 
     def main_loop(self):
@@ -195,7 +203,6 @@ class game():
             #turn managing
             if self.your_turn == "False":
                 answ = server.send_and_listen("req:actio")
-                print(answ,"answ")
                 if not answ == "False":
                     l_answ = list(answ)
                     del l_answ[0],l_answ[-1]
@@ -207,7 +214,6 @@ class game():
                     answ = ""
                     for b in l_answ:
                         answ += b
-                    print(answ)
                     self.decode(answ)
 
             if players_count <= 1:
@@ -218,7 +224,6 @@ class game():
                 self.deck_opponent_rect.is_updating = True
                 mt = self.server.send_and_listen("req clients turn")
                 self.your_turn = mt
-                print(self.your_turn)
 
 
             screen.fill((100,100,125))
@@ -285,8 +290,11 @@ class game():
                         pre_sel = selected_card
                         if selected_card != False:
                             selected_card_position_after = self.shown_cards[selected_card].get_pos()
+                            selected_card_position_after = str(selected_card_position_after)
+                            selected_card_position_after = selected_card_position_after.replace(", ","/")
+                            print("s_c_p_a: ",selected_card_position_after)
+                            self.actions.append(f"move:{selected_card}*{selected_card_position_after}")
                             selected_card = False
-                            self.actions.append(f"move:{selected_card},{selected_card_position_after}")
 
                         #complicated way of handling selecting and unselecting cards
                         for card in listed_s_c:
@@ -297,10 +305,11 @@ class game():
                         if self.your_turn_rect.get_point_collide(pygame.mouse.get_pos()) and self.your_turn == "True":
                             server.send(f"actio;{self.actions}")
                             self.your_turn = "False"
-                            print("turn submitted")
 
             pygame.display.update()
 
+if ip == "":
+    ip = "x13-2-1"
 server = server_manager(ip)
 my_game = game(action,own_cards_dict,server)
 my_game.main_loop()       
