@@ -175,21 +175,21 @@ class game():
         data_string = data_string.replace("'","")
         all_actions = data_string.split(", ")
         for action in all_actions:
-            print("action:",action)
-            splitted = data_string.split(":")
+            splitted = action.split(":")
+            x = 0
             for split in splitted:
-                splitted[splitted.index(split)-1] = split.replace("'","")
-            print("splitted:", splitted)
+                splitted[x] = split.replace("'","")
+                x += 1
             action_name = splitted[0]
             action_info_string = splitted[1]
             action_info_list = action_info_string.split("*")
-            print(action_name)
             if action_name == "create":
                 self.shown_cards[action_info_list[0]] = Rectangle((245*0.65,324*0.65),self.transform_the_position((width-300,height-400)),(0,0,0),action_info_list[1],cards_full_name=action_info_list[2])
                 self.flip_card(action_info_list[0])
             if action_name == "move":
                 print(action_info_list)
-                self.shown_cards[action_info_list[0]].set_position(action_info_list[1])
+                x,y = action_info_list[1].split("/")
+                self.shown_cards[action_info_list[0]].set_position(x,y)
 
             self.your_turn = "True"
         print("turn executed")
