@@ -165,6 +165,15 @@ class game():
         else:
             self.shown_cards[str(card_name)].set_image("back_oc.png",False)
             self.shown_cards[str(card_name)].flipped = False
+    
+    def flip_rect(self,rect):
+        if not rect.flipped:
+            rect.set_image(rect.unloaded_image,False)
+            rect.flipped = True
+        else:
+            rect.set_image("back_oc.png",False)
+            rect.flipped = False
+
     def transform_the_position(self,pos=(width-300,height-400)):
         #a function to place the opponents cards on the right place:
         new_pos = (width-pos[0],height-pos[1])
@@ -193,14 +202,14 @@ class game():
                 pos = (x,y)
                 pos = self.transform_the_position((int(x),int(y)))
                 self.shown_cards[action_info_list[0]].set_position(pos[0],pos[1])
-
+            if action_name == "flip_c":
+                self.flip_card(action_info_list[0])
             self.your_turn = "True"
         print("turn executed")
 
     def main_loop(self):
         players_count = 0
         selected_card = False
-        selected_card_position_befor = ()
         selected_card_position_after = ()
         while self.running:
             #turn managing
@@ -287,6 +296,7 @@ class game():
                         for card in listed_s_c:
                             if self.shown_cards[card].get_point_collide(pygame.mouse.get_pos()):
                                 self.flip_card(card)
+                                self.actions.append(f"flip_c:{card}")
 
                     if event.button == 1:
                         listed_s_c = list(self.shown_cards)
@@ -298,6 +308,42 @@ class game():
                             print("s_c_p_a: ",selected_card_position_after)
                             self.actions.append(f"move:{selected_card}*{selected_card_position_after}")
                             selected_card = False
+
+                        if self.deck_rect.get_point_collide(pygame.mouse.get_pos()):
+                            r = True
+                            rects = []
+                            row = 1
+                            vert = 1
+                            for card in self.cards_in_deck:
+                                    rects.append(Rectangle((245*0.65,324*0.65),(round(width/10)*row-70,(round(height/6))*vert-50),(0,0,0),self.get_image_without_number(card),cards_full_name=self.cards_in_deck[0]))
+                                    row += 1
+                                    if row == 11:
+                                        row = 1
+                                        vert += 1
+                            for rect in rects:
+                                self.flip_rect(rect)
+
+                            while r:
+                                for event in pygame.event.get():
+                                    if event.type == pygame.QUIT:
+                                        sys.exit()
+                                    if event.type == pygame.KEYDOWN:
+                                        if event.key == pygame.K_c:
+                                            r = False
+                                        if event.key == pygame.K_a:
+                                            for rect in rects:
+                                                self.flip_rect(rect)
+                                                
+                                    if event.type == pygame.MOUSEBUTTONDOWN:
+                                        if event.button == 3:
+                                            for card in rects:
+                                                if card.get_point_collide(pygame.mouse.get_pos()):
+                                                    self.flip_rect(card)   
+                                screen.fill((0,0,0))
+                                for rect in rects:
+                                    rect.update(screen)
+                                pygame.display.update()
+                                    
 
                         #complicated way of handling selecting and unselecting cards
                         for card in listed_s_c:
