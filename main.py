@@ -131,6 +131,7 @@ class game():
         self.my_cards = action.make_list_from_card_dic(own_dict)
         self.cards_in_deck = self.my_cards
         self.deck_rect = Rectangle((245*0.75,324*0.75),(width-100,height-350),(0,0,0),"back_oc.png")
+        self.discard_rect = Rectangle((100,100),((width-110,height-110)),(0,0,0))
         self.deck_opponent_rect = Rectangle((245*0.75,324*0.75),(100,350),(0,0,0),"back_oc.png")
         self.your_turn_rect = Rectangle((100,100),(150,height/2),(0,0,255))
         self.your_turn = None
@@ -241,6 +242,7 @@ class game():
             screen.fill((100,100,125))
             #update things
             self.deck_rect.update(screen)
+            self.discard_rect.update(screen)
             self.deck_opponent_rect.update(screen)
             if self.your_turn == "True":
                 self.your_turn_rect.fill_rect_with_color((0,255,0))
@@ -256,6 +258,7 @@ class game():
                     #the defeated card must be updated:
                     self.defeated_cards.append(self.shown_cards[selected_card].cardsfn)
                     #how to get the exact name of the card print(self.shown_cards[selected_card].cardsfn)
+                    selected_card = False
 
             self.your_turn_rect.update(screen)
             listed_s_c = list(self.shown_cards)
@@ -308,7 +311,7 @@ class game():
                             print("s_c_p_a: ",selected_card_position_after)
                             self.actions.append(f"move:{selected_card}*{selected_card_position_after}")
                             selected_card = False
-
+                        #a menu for picking cards from the deck
                         if self.deck_rect.get_point_collide(pygame.mouse.get_pos()):
                             r = True
                             rects = []
@@ -350,19 +353,67 @@ class game():
                                                     self.actions.append(f"create:card{l}*{self.get_image_without_number(card.cardsfn)}*{card.cardsfn}")
                                                     del self.cards_in_deck[self.cards_in_deck.index(card.cardsfn)]
                                                     r = False
-
+                        
                                 screen.fill((0,0,0))
                                 for rect in rects:
                                     rect.update(screen)
                                 pygame.display.update()
                                     
+                        #the second time we have to open a new "window" to search a pile of cards:
+                        if self.discard_rect.get_point_collide(pygame.mouse.get_pos()):
+                            r = True
+                            rects = []
+                            row = 1
+                            vert = 1
+                            for card in self.defeated_cards:
+                                    rects.append(Rectangle((245*0.65,324*0.65),(round(width/10)*row-70,(round(height/6))*vert-50),(0,0,0),self.get_image_without_number(card),cards_full_name=card))
+                                    row += 1
+                                    if row == 11:
+                                        row = 1
+                                        vert += 1
+                            for rect in rects:
+                                self.flip_rect(rect)
 
+                            while r:
+                                for event in pygame.event.get():
+                                    if event.type == pygame.QUIT:
+                                        sys.exit()
+                                    if event.type == pygame.KEYDOWN:
+                                        if event.key == pygame.K_c:
+                                            r = False
+                                        if event.key == pygame.K_a:
+                                            for rect in rects:
+                                                self.flip_rect(rect)
+
+                                    if event.type == pygame.MOUSEBUTTONDOWN:
+                                        if event.button == 3:
+                                            for card in rects:
+                                                if card.get_point_collide(pygame.mouse.get_pos()):
+                                                    self.flip_rect(card) 
+
+                                        if event.button == 1:
+                                            for card in rects:
+                                                if card.get_point_collide(pygame.mouse.get_pos()):
+                                                    l = len(list(self.shown_cards))
+                                                    card.set_position(width-300,height-400)
+                                                    self.shown_cards[f"card{l}"] = card
+                                                    #the command to make a card with the attributes name,original image,the cards full name
+                                                    self.actions.append(f"create:card{l}*{self.get_image_without_number(card.cardsfn)}*{card.cardsfn}")
+                                                    del self.defeated_cards[self.defeated_cards.index(card.cardsfn)]
+                                                    r = False
+                        
+                                screen.fill((0,0,0))
+                                for rect in rects:
+                                    rect.update(screen)
+                                pygame.display.update()
+                          
                         #complicated way of handling selecting and unselecting cards
                         for card in listed_s_c:
                             if self.shown_cards[card].get_point_collide(pygame.mouse.get_pos()):
                                     if selected_card == False and not pre_sel == card:
                                         selected_card = card
                                         selected_card_position_befor = self.shown_cards[card].get_pos()
+
                         if self.your_turn_rect.get_point_collide(pygame.mouse.get_pos()) and self.your_turn == "True":
                             server.send(f"actio;{self.actions}")
                             self.your_turn = "False"
