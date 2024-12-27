@@ -150,12 +150,12 @@ class game():
             image += i
         return image
 
-    def draw_card(self):
+    def draw_card(self,card=0):
         l = len(list(self.shown_cards))
-        self.shown_cards[f"card{l}"] = Rectangle((245*0.65,324*0.65),(width-300,height-400),(0,0,0),self.get_image_without_number(self.cards_in_deck[0]),cards_full_name=self.cards_in_deck[0])
+        self.shown_cards[f"card{l}"] = Rectangle((245*0.65,324*0.65),(width-300,height-400),(0,0,0),self.get_image_without_number(self.cards_in_deck[card]),cards_full_name=self.cards_in_deck[card])
         self.flip_card(f"card{l}")
         #the command to make a card with the attributes name,original image,the cards full name
-        self.actions.append(f"create:card{l}*{self.get_image_without_number(self.cards_in_deck[0])}*{self.cards_in_deck[0]}")
+        self.actions.append(f"create:card{l}*{self.get_image_without_number(self.cards_in_deck[card])}*{self.cards_in_deck[card]}")
         del self.cards_in_deck[0]
 
     def flip_card(self,card_name):
@@ -315,7 +315,7 @@ class game():
                             row = 1
                             vert = 1
                             for card in self.cards_in_deck:
-                                    rects.append(Rectangle((245*0.65,324*0.65),(round(width/10)*row-70,(round(height/6))*vert-50),(0,0,0),self.get_image_without_number(card),cards_full_name=self.cards_in_deck[0]))
+                                    rects.append(Rectangle((245*0.65,324*0.65),(round(width/10)*row-70,(round(height/6))*vert-50),(0,0,0),self.get_image_without_number(card),cards_full_name=card))
                                     row += 1
                                     if row == 11:
                                         row = 1
@@ -333,12 +333,24 @@ class game():
                                         if event.key == pygame.K_a:
                                             for rect in rects:
                                                 self.flip_rect(rect)
-                                                
+
                                     if event.type == pygame.MOUSEBUTTONDOWN:
                                         if event.button == 3:
                                             for card in rects:
                                                 if card.get_point_collide(pygame.mouse.get_pos()):
-                                                    self.flip_rect(card)   
+                                                    self.flip_rect(card) 
+
+                                        if event.button == 1:
+                                            for card in rects:
+                                                if card.get_point_collide(pygame.mouse.get_pos()):
+                                                    l = len(list(self.shown_cards))
+                                                    card.set_position(width-300,height-400)
+                                                    self.shown_cards[f"card{l}"] = card
+                                                    #the command to make a card with the attributes name,original image,the cards full name
+                                                    self.actions.append(f"create:card{l}*{self.get_image_without_number(card.cardsfn)}*{card.cardsfn}")
+                                                    del self.cards_in_deck[self.cards_in_deck.index(card.cardsfn)]
+                                                    r = False
+
                                 screen.fill((0,0,0))
                                 for rect in rects:
                                     rect.update(screen)
