@@ -23,6 +23,7 @@ class Rectangle():
             self.rect_rect = self.rect.get_rect(center=position)
         else:
             self.unloaded_image = image
+            self.current = image
             self.original_image = pygame.image.load(image).convert_alpha()
             self.original_image = pygame.transform.scale(self.original_image, size)
             self.original_image.set_alpha(self.transparency)
@@ -54,6 +55,7 @@ class Rectangle():
 
     def set_image(self,image, is_loaded=False):
         if is_loaded == False:
+            self.current = image
             self.original_image = pygame.image.load(image).convert_alpha()
             self.original_image = pygame.transform.scale(self.original_image, self.size)
             self.original_image.set_alpha(self.transparency)

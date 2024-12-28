@@ -125,6 +125,7 @@ action = actions(own_cards_dict)
 
 class game():
     def __init__(self,action_class,own_dict,server):
+        self.all_counters = ["counter10.png","counter20.png","counter50.png","blitzel.png","burnt.png","poison.png","sleep.png","verrwirt.png"]
         self.server = server
         self.action = action_class
         self.running = True
@@ -134,6 +135,7 @@ class game():
         self.discard_rect = Rectangle((100,100),((width-110,height-110)),(0,0,0))
         self.deck_opponent_rect = Rectangle((245*0.75,324*0.75),(100,350),(0,0,0),"back_oc.png")
         self.your_turn_rect = Rectangle((100,100),(150,height/2),(0,0,255))
+        self.counter_rect = Rectangle((100,100),(260,height/2),(0,0,255),"covorlage - Kopie.png")
         self.your_turn = None
         self.deck_opponent_rect.is_updating = False
         self.shown_cards = {}
@@ -244,6 +246,7 @@ class game():
             self.deck_rect.update(screen)
             self.discard_rect.update(screen)
             self.deck_opponent_rect.update(screen)
+            self.counter_rect.update(screen)
             if self.your_turn == "True":
                 self.your_turn_rect.fill_rect_with_color((0,255,0))
             if self.your_turn == "False":
@@ -269,6 +272,20 @@ class game():
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        if selected_card != False:
+                            print("test:",self.shown_cards[selected_card].unloaded_image, self.all_counters)
+                            if self.shown_cards[selected_card].unloaded_image in self.all_counters:
+                                print("yess")
+                                if self.all_counters.index(self.shown_cards[selected_card].unloaded_image) < len(self.all_counters):
+                                    print(self.shown_cards[selected_card].image)
+                                    #set_image("back_oc.png",False),   set_image(self.all_counters[self.all_counters.index(self.shown_cards[selected_card].unloaded_image)])
+                                    self.shown_cards[selected_card].set_image(self.all_counters[self.all_counters.index(self.shown_cards[selected_card].current)+1])
+                                    print(self.shown_cards[selected_card].image)
+                                    self.shown_cards[selected_card].update(screen)
+                                else:
+                                    self.shown_cards[selected_card].set_image(self.all_counters[0])
+
                     if event.key == pygame.K_p:
                         if self.deck_rect.get_point_collide(pygame.mouse.get_pos()):
                             self.draw_card()
@@ -302,6 +319,18 @@ class game():
                                 self.actions.append(f"flip_c:{card}")
 
                     if event.button == 1:
+                        rp = self.counter_rect.get_pos()
+                        mp = pygame.mouse.get_pos()
+                        xdist,ydist = abs(rp[0]-mp[0]),abs(rp[1]-mp[1])
+                        dist = math.sqrt(xdist*xdist+ydist*ydist)
+                        if dist <= 50:
+                            l = len(list(self.shown_cards))
+                            self.shown_cards[f"card{l}"] = Rectangle((75,75),(300,height/2),(0,0,255),self.all_counters[0])
+
+
+                        if selected_card == False:
+                            if self.counter_rect.get_point_collide(pygame.mouse.get_pos()):
+                                self.shown_cards
                         listed_s_c = list(self.shown_cards)
                         pre_sel = selected_card
                         if selected_card != False:
