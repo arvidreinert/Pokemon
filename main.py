@@ -224,6 +224,7 @@ class game():
         selected_card = False
         selected_card_position_after = ()
         while self.running:
+            clock.tick(10)
             #turn managing
             if self.your_turn == "False":
                 answ = server.send_and_listen("req:actio")
